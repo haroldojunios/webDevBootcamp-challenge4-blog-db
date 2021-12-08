@@ -24,7 +24,9 @@ const postsSchema = { title: String, content: String };
 const Post = mongoose.model("Post", postsSchema);
 
 app.get("/", function (req, res) {
-  res.render("home", { startingContent: homeStartingContent, posts: posts });
+  Post.find({}, function (err, foundPosts) {
+    res.render("home", { startingContent: homeStartingContent, posts: foundPosts });
+  });
 });
 
 app.get("/about", function (req, res) {
@@ -43,7 +45,7 @@ app.post("/compose", function (req, res) {
   const post = new Post({ title: req.body.postTitle, content: req.body.postBody });
   post.save();
 
-  res.redirect("/compose");
+  res.redirect("/");
 });
 
 app.get("/posts/:postName", function (req, res) {
